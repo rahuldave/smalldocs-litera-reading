@@ -193,3 +193,35 @@ def test_code_profile_has_one_padding_owner(foundation):
         assert "--r-size-code: 1rem;" in generated
         assert "--r-line-code: 1.5;" in generated
         assert "--r-space-panel: 1.5rem;" in generated
+
+
+@pytest.mark.parametrize("mode", ["light", "dark"])
+@pytest.mark.parametrize("state", ['class="active"', 'aria-current="page"', 'aria-selected="true"'])
+@pytest.mark.parametrize("interaction", ["normal", "hover", "focus-visible"])
+def test_compiled_selected_nav_pill_cascade(foundation, mode, state, interaction):
+    from css_probe import effective_colors
+    roles = builder.resolve(foundation["modes"][mode])
+    classes = "nav-link" + (" probe-" + interaction if interaction != "normal" else "")
+    if state.startswith('class='):
+        classes += " active"
+        state = ""
+    fragment = f'<nav class="nav nav-pills"><a id="probe" class="{classes}" {state} href="#">Selected</a></nav>'
+    for extension in ("css", "scss"):
+        css = (ROOT / "_extensions" / foundation["theme"] / f"{foundation['theme']}-{mode}.{extension}").read_text()
+        if extension == "scss":
+            css = css.split("/*-- scss:rules --*/", 1)[1]
+        colors = effective_colors(css, fragment)
+        assert (colors["color"], colors["background-color"]) == (roles["selected-ink"], roles["selected-fill"]), (mode, state, interaction, extension, colors)
+        assert colors["text-decoration"] == "underline"
+        assert contrast(colors["color"], colors["background-color"]) >= 4.5
+    fixture = (ROOT / "tests/fixtures/components.qmd").read_text()
+    assert 'id="selected-page"' in fixture and 'id="selected-tab"' in fixture
+
+
+def test_release_metadata_follows_project_version(foundation):
+    import tomllib
+    version = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
+    assert json.loads((ROOT / "src/theme.json").read_text())["version"] == version
+    for path in (ROOT / "src/_extension.yml", ROOT / "_extensions" / foundation["theme"] / "_extension.yml"):
+        assert yaml.safe_load(path.read_text())["version"] == version
+    assert foundation["typography"]["lineHeights"]["reading"] == 1.6

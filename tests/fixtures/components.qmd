@@ -31,6 +31,9 @@ Ordinary **primary prose** explains a [linked idea](#controls) without fading in
 <section><label class="form-label" for="invalid">Required identifier</label><input id="invalid" class="form-control" aria-invalid="true" aria-describedby="invalid-message" value="?" /><p id="invalid-message" class="error-message">⚠ Error: enter a valid identifier.</p><div class="card"><div class="card-body"><h3>Bounded panel</h3><p>Primary prose remains readable on a panel. <a href="#states">Panel link</a></p></div></div></section>
 </div>
 
+<nav class="nav nav-pills" aria-label="Example pages"><a id="selected-page" class="nav-link active" href="#controls" aria-current="page">Current page</a><a class="nav-link" href="#states">Other page</a></nav>
+<div class="nav nav-pills" role="tablist" aria-label="Example views"><button id="selected-tab" class="nav-link" type="button" role="tab" aria-selected="true">Selected view</button><button class="nav-link" type="button" role="tab" aria-selected="false" tabindex="-1">Other view</button></div>
+
 ## States
 
 <div class="alert alert-success" role="status"><strong>✓ Success:</strong> the document was saved.</div>

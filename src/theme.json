@@ -2,7 +2,7 @@
   "name": "litera-reading",
   "title": "Litera Reading",
   "upstream": "https://bootswatch.com/litera/",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "palette": {
     "paper": "#ffffff",
     "ink": "#343a40",
